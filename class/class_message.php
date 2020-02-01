@@ -1,8 +1,8 @@
 <?php
 class Message {
 
-    public function output ($msg, $visibleTo = "") {
-        return $msg;
+    public function output ($msg) {
+        print $msg;
     }
 
 }

@@ -1,28 +1,31 @@
 <?php 
-$title = 'Movies And Series - Register';
 require_once('header.php');
+$title = 'Movies And Series - Register';
 
-$_SESSION['message'] = '';
-$error = [];
+$notifications = [];
 
-function registerUser ( $user, $password, $email, $gender ){
-    global $source;
-    if ( isset($password) && strlen($password) >= 8 && strlen($password) > 3 ) {
-        $accountAdded = $source->add ($user, $password, $email, $gender);
-        if ($accountAdded) {
-            global $error;
-            $error[] = 'Account has been added to database.';
-            return true;
-            
+function registerUser ( $username, $password, $email, $gender ) {
+    global $source, $message, $notifications;
+    if (isset($username) && strlen($username) >= 3 && strlen($username < 16) ) {  
+        if ( isset($email) && filter_var($email, FILTER_VALIDATE_EMAIL && strlen($email) >= 3 && strlen($email) < 16) ) { 
+            if ( isset($password) && strlen($password) >= 8 ) {
+                $accountAdded = $source->add ($username, $password, $email, $gender);
+                if ($accountAdded) {
+                    $notifications[] = 'Account has been added to database.';
+                    return true;
+                } else {
+                    $notifications[] = 'Error creating account.';
+                    return false;
+                }
+            } else {
+                $notifications[] = "Password doesn't meet requirements";
+                return false;
+            }
         } else {
-            global $error;
-            $error[] = 'Error creating account.';
-            return false;
+            $notifications[] = "Email doesn't meet requirements.";
         }
     } else {
-        global $error;
-            $error[] = "Password doesn't meet requirements";
-            return false;
+        $notifications[] = "Username doesn't meet requirements.";
     }
 }
 
@@ -31,17 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         registerUser( $_POST['username'], $_POST['password'], $_POST['email'], $_POST['gender']);
 
-
     } else {
-        $error[] = 'Passwords are different.';
-        
+        $notifications[] = 'Passwords are different.';
     }
-    print_r($error);
-    echo $message->output("Co tam");
 }
 
 
 ?>
+
 <main>
     <div class="wrapper">
 
@@ -51,18 +51,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         ?>
         <p>You are logged in.</p>
     <?php else : ?>
-        
-        
-<? echo 'dwa';
-    
-?>
-        <?php 
-            if(!empty($error)){
-                foreach($error as $value){
-                    echo '<p class="notify-info">'.$value.'</p>';
-                }
-            }
-        ?>
+        <?php if(!empty($notifications)): ?>
+            <?php foreach($notifications as $value): ?>
+                <p class="notify-info"><?php $message->output($value) ?></p>
+            <?php endforeach; ?>
+        <?php endif; ?>
+            
         
 
         <div class="box">
@@ -71,17 +65,17 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <p>To register fill these fields (fields with * are required).</p><br>
             <form action="register.php" id="register_form" method="POST" autocomplete="off"> 
                 <label for="username"><b>Username: *</b></b></label>
-                <input type="text" name="username" placeholder="3-30 characters, only letters, numbers and chars @.+-_"required/>
+                <input type="text" name="username" placeholder="3-30 characters, only letters, numbers and chars @.+-_"/>
                 <label><b>E-mail: *</b> </label>
-                <input type="email" name="email" required/>
+                <input type="text" name="email" />
                 <div class="inline">
                     <div style="width: 50%;">
                         <b>Password: *</b><br>
-                        <input type="password" name="password" required/>
+                        <input type="password" name="password" />
                     </div>
                     <div style="width: 50%;">
                         <b>Confirm Password: *</b><br>
-                        <input type="password" name="confirmpassword" required/>
+                        <input type="password" name="confirmpassword" />
                     </div>
                 </div>
                 <b>Gender:</b>
@@ -91,7 +85,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                     <option value="male">Male</option>
                 </select>
                 
-                I have read <a href="rules.php">rules</a> <input type="checkbox" required><br>
+                I have read <a href="rules.php">rules</a> <input type="checkbox" ><br>
                 <button type="submit" name="register">Register</button>
             </form>
         </div>
