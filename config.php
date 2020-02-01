@@ -16,5 +16,7 @@
 
 
     include('class/class_account.php');
+    include('class/class_message.php');
     $source = new Account($db); 
+    $message = new Message();
 ?>

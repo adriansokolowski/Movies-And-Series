@@ -9,13 +9,12 @@
         }
 
         public function add ( $name, $pass, $email, $gender="unknown" ) {
-            if ($this->getAccount($name)) {
+            if ($this->get($name)) {
                 return false;
-                $error[] = 'Account with that username already exist.';
             } else {
                 $result = $this->_db->prepare('INSERT INTO mas_accounts (username, password, email, gender, regdate, usergroup) VALUES (:name, :pass, :email, :gender, NOW(), 1)');
                 $result->execute(array(':name' => $name, ':pass' => password_hash($pass, PASSWORD_BCRYPT), ':email' => $email, ':gender' => $gender));
-                return $this->getAccount($name);
+                return $this->get($name);
             }
         }
 
@@ -28,12 +27,11 @@
             Returns An account or false.   
         */
 
-        public function getAccount ( $username ){
+        public function get ( $username ){
             $result = $this->_db->prepare('SELECT * FROM mas_accounts WHERE username = :username');
             $result->execute(array(':username' => $username));
             if (($result->rowCount() == 0)){
                 return false;
-                $error[] = 'Account with that username doesnt exist.';
             } else {
                 $account = $result->fetch( PDO::FETCH_ASSOC );
                 return $account;
@@ -56,8 +54,9 @@
 
         public function logIn ($account, $password){
             if ( password_verify( $password, $account['password'] )){
-                if ($_SESSION['isLogged'] == true) {
+                if ($_SESSION['isLoggedIn'] == true) {
                     return false;
+                    $error[] = "You are already logged in";
                 } else {
                     $_SESSION['username'] = $account['username'];
                     $_SESSION['isLoggedIn'] = true;

@@ -6,12 +6,14 @@
 <main>
     <div class="wrapper">
         <?php 
-            if (isset($_SESSION["username"]))
+            if (isset($_SESSION["username"])) {
             echo $_SESSION["username"];
-        
-            echo "ok";
+
+        echo '<a href="logout.php">Log out</a>';
+        } else {
+            echo 'You are not logged in.';
+        }
         ?>
-        <a href="logout.php">Log out</a>
     </div>
 </main>
 

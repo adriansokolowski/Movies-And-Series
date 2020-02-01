@@ -5,7 +5,7 @@
 
     if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
-        $account = $source->getAccount($_POST['username']);
+        $account = $source->get($_POST['username']);
 
         
 
@@ -26,7 +26,6 @@
             <div class="box">
             <h2>Log In</h2>
             <form action="login.php" method="POST" autocomplete="off"> 
-                <?php $_SESSION['message'] ?><br>
                 Login:
                 <input type="text" name="username"/><br>
                 Password:

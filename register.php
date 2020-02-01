@@ -3,19 +3,26 @@ $title = 'Movies And Series - Register';
 require_once('header.php');
 
 $_SESSION['message'] = '';
+$error = [];
 
 function registerUser ( $user, $password, $email, $gender ){
     global $source;
     if ( isset($password) && strlen($password) >= 8 && strlen($password) > 3 ) {
         $accountAdded = $source->add ($user, $password, $email, $gender);
         if ($accountAdded) {
+            global $error;
             $error[] = 'Account has been added to database.';
+            return true;
             
         } else {
+            global $error;
             $error[] = 'Error creating account.';
+            return false;
         }
     } else {
-
+        global $error;
+            $error[] = "Password doesn't meet requirements";
+            return false;
     }
 }
 
@@ -27,7 +34,10 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
     } else {
         $error[] = 'Passwords are different.';
+        
     }
+    print_r($error);
+    echo $message->output("Co tam");
 }
 
 
@@ -43,11 +53,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     <?php else : ?>
         
         
-
+<? echo 'dwa';
+    
+?>
         <?php 
-            if(isset($error)){
-                foreach($error as $error){
-                    echo '<p class="notify-info">'.$error.'</p>';
+            if(!empty($error)){
+                foreach($error as $value){
+                    echo '<p class="notify-info">'.$value.'</p>';
                 }
             }
         ?>
