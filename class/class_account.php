@@ -38,6 +38,17 @@
             }
         }
 
+        public function getAllByEmail ( $email ) {
+            $result = $this->_db->prepare('SELECT * FROM mas_accounts WHERE email = :email');
+            $result->execute(array(':email' => $email));
+            if (($result->rowCount() == 0)){
+                return false;
+            } else {
+                $account = $result->fetch( PDO::FETCH_ASSOC );
+                return $account;
+            }
+        }
+
         public function isLoggedIn(){
             if ( isset($_SESSION['isLoggedIn']) && $_SESSION['isLoggedIn'] == true )
                 return true;

@@ -71,13 +71,16 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <form action="register.php" id="register_form" method="POST" autocomplete="off"> 
 
                 <div id='validate'>
-                    <label for="username"><b>Username: *</b></b></label>
+                    <label for="username"><b>Username: *</b><</label>
                     <input type="text" name="username" id="username" v-bind:class="[hasError ? 'error' : 'valid']" class="form-control" v-model='username' @keyup='checkUsername()' placeholder="3-30 characters, only letters, numbers and chars @.+-_"/>
-                    <label for="username" v-bind:class="[hasError ? 'notavailable' : 'available']" class="error">{{responseMessage}}</label>
+                    <label for="username" v-bind:class="[hasError ? 'notavailable' : 'available']" class="error">{{responseUsername}}</label>
                 
-                <br>
-                    <label><b>E-mail: *</b> </label>
-                    <input type="text" name="email" class="form-control" />
+                    <br>
+
+                    <label for="email"><b>E-mail: *</b> </label>
+                    <input type="text" name="email" id="email" v-bind:class="[hasError ? 'error' : 'valid']" class="form-control" v-model='email' @keyup='checkEmail()' placeholder="3-30 characters, only letters, numbers and chars @.+-_"/>
+                    <label for="email" v-bind:class="[hasError ? 'notavailable' : 'available']" class="error">{{responseEmail}}</label>
+                
                 </div>
                 <div class="inline">
                     <div style="width: 50%;">
