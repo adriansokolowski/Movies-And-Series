@@ -1,4 +1,12 @@
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+
+
+
+
+
 <?php 
+
 require_once('header.php');
 $title = 'Movies And Series - Register';
 
@@ -42,6 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 ?>
 
+
 <main>
     <div class="wrapper">
 
@@ -57,15 +66,20 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
             <?php endforeach; ?>
         <?php endif; ?>
             
-        
+       
 
         <div class="box">
             <h2>Create Account</h2>
             <hr>
             <p>To register fill these fields (fields with * are required).</p><br>
             <form action="register.php" id="register_form" method="POST" autocomplete="off"> 
-                <label for="username"><b>Username: *</b></b></label>
-                <input type="text" name="username" placeholder="3-30 characters, only letters, numbers and chars @.+-_"/>
+
+                <div id='myapp'>
+                    <label for="username"><b>Username: *</b></b></label>
+                    <input type="text" id="username" name="username" class="form-control" v-model='username' @keyup='checkUsername()' placeholder="3-30 characters, only letters, numbers and chars @.+-_"/>
+                    <label for="username" v-bind:class="[isAvailable ? 'notavailable' : 'available']" class="error">{{responseMessage}}</label>
+                </div>
+                <br>
                 <label><b>E-mail: *</b> </label>
                 <input type="text" name="email" />
                 <div class="inline">
@@ -93,6 +107,45 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 </main>
 
 <?php endif; ?>
+<script>
+    var app = new Vue({
+  el: '#myapp',
+  data: {
+    username: '',
+    isAvailable: 0,
+    responseMessage: ''
+  },
+  methods: {
+    checkUsername: function(){
+      var username = this.username.trim();
+      
+      if(username != ''){
+ 
+       axios.get('validation.php', {
+         params: {
+           username: username
+         }
+       })
+       .then(function (response) {
+         app.isAvailable = response.data;
+         if(response.data == 0){
+           app.responseMessage = "Username is Available.";
+         }else{
+           app.responseMessage = "Username is not Available.";
+         }
+       })
+       .catch(function (error) {
+         console.log(error);
+       });
+
+     }else{
+       this.responseMessage = "";
+     }
+   }
+  }
+})
+</script>
+
 
 <?php
     require_once('footer.php');

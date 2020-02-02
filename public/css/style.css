@@ -153,6 +153,16 @@ footer > .wrapper {
     resize: vertical;
 }
 
+.form-control {
+    width: 100%;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-top: 6px;
+    margin-bottom: 16px;
+    resize: vertical;
+}
+
 #register_form > button[type=submit] {
     background-color: #4CAF50;
     color: white;
@@ -176,4 +186,16 @@ footer > .wrapper {
     margin-top: 6px;
     margin-bottom: 16px;
     resize: vertical;
+}
+
+.valid {
+    border: 1px solid #0c0!important;
+}
+
+input.error {
+    border: 1px solid red;
+}
+
+label.error {
+    color: #f30;
 }
